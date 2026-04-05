@@ -1,0 +1,3 @@
+# Step 1: JWT 검증 + 릴레이
+app:
+  mode: jwt-relay

@@ -1,0 +1,84 @@
+# 로컬 통합 실행: docker compose up --build
+# Jaeger UI: http://localhost:16686  OTLP HTTP: jaeger:4318
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.52
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SVC: user-service
+    environment:
+      APP_MODE: ${APP_MODE:-no-auth}
+      SERVER_PORT: "8083"
+      ARTIFICIAL_LATENCY_MS: ${ARTIFICIAL_LATENCY_MS:-0}
+      OTLP_TRACES_ENDPOINT: http://jaeger:4318/v1/traces
+      JWT_SECRET: ${JWT_SECRET:-benchmark-jwt-hmac-secret-key-min-32-bytes!!}
+    ports:
+      - "8083:8083"
+    depends_on:
+      - jaeger
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SVC: inventory-service
+    environment:
+      APP_MODE: ${APP_MODE:-no-auth}
+      SERVER_PORT: "8082"
+      USER_SERVICE_URL: http://user-service:8083
+      ARTIFICIAL_LATENCY_MS: ${ARTIFICIAL_LATENCY_MS:-0}
+      OTLP_TRACES_ENDPOINT: http://jaeger:4318/v1/traces
+      JWT_SECRET: ${JWT_SECRET:-benchmark-jwt-hmac-secret-key-min-32-bytes!!}
+    ports:
+      - "8082:8082"
+    depends_on:
+      - user-service
+      - jaeger
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SVC: order-service
+    environment:
+      APP_MODE: ${APP_MODE:-no-auth}
+      SERVER_PORT: "8081"
+      INVENTORY_SERVICE_URL: http://inventory-service:8082
+      ARTIFICIAL_LATENCY_MS: ${ARTIFICIAL_LATENCY_MS:-0}
+      OTLP_TRACES_ENDPOINT: http://jaeger:4318/v1/traces
+      JWT_SECRET: ${JWT_SECRET:-benchmark-jwt-hmac-secret-key-min-32-bytes!!}
+    ports:
+      - "8081:8081"
+    depends_on:
+      - inventory-service
+      - jaeger
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SVC: gateway-service
+    environment:
+      APP_MODE: ${APP_MODE:-no-auth}
+      SERVER_PORT: "8080"
+      ORDER_SERVICE_URL: http://order-service:8081
+      ARTIFICIAL_LATENCY_MS: ${ARTIFICIAL_LATENCY_MS:-0}
+      OTLP_TRACES_ENDPOINT: http://jaeger:4318/v1/traces
+      JWT_SECRET: ${JWT_SECRET:-benchmark-jwt-hmac-secret-key-min-32-bytes!!}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - order-service
+      - jaeger

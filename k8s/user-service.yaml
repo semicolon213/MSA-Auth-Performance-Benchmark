@@ -1,0 +1,69 @@
+# 노드 어피니티: 세 번째 워커(node3)에 스케줄 — values의 node3를 실제 노드 이름으로 교체하세요.
+# kubectl get nodes -o wide
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: msa-benchmark
+  labels:
+    app: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - name: http
+      port: 8083
+      targetPort: 8083
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: msa-benchmark
+  labels:
+    app: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+        # Istio 실험 시 사이드카 주입 (클러스터 정책에 맞게 사용)
+        # sidecar.istio.io/inject: "true"
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - "node3"
+      containers:
+        - name: user-service
+          image: msa-user-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
+          envFrom:
+            - configMapRef:
+                name: msa-benchmark-env
+          env:
+            - name: SERVER_PORT
+              value: "8083"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 40
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 20
+            periodSeconds: 5

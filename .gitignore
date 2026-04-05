@@ -1,0 +1,37 @@
+# Maven
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+release.properties
+
+# 로컬 환경 변수 (비밀키·개인 설정 — 커밋 금지)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# JMeter / 부하 테스트 결과
+results/
+*.jtl
+
+# 로그
+*.log
+hs_err_pid*.log
+
+# 기타
+*.swp
+*.swo
+~$*

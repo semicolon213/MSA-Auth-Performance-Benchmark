@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: order-service
+  profiles:
+    active: ${APP_MODE:no-auth}
+
+server:
+  port: ${SERVER_PORT:8081}
+
+app:
+  mode: ${APP_MODE:no-auth}
+  artificial-latency-ms: ${ARTIFICIAL_LATENCY_MS:0}
+
+jwt:
+  secret: ${JWT_SECRET:benchmark-jwt-hmac-secret-key-min-32-bytes!!}
+
+services:
+  inventory:
+    url: ${INVENTORY_SERVICE_URL:http://localhost:8082}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLE_PROBABILITY:1.0}
+  otlp:
+    tracing:
+      endpoint: ${OTLP_TRACES_ENDPOINT:http://localhost:4318/v1/traces}
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
