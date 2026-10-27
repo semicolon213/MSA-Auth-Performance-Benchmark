@@ -2,36 +2,66 @@
 **/target/
 pom.xml.tag
 pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
 release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Java
+*.class
+hs_err_pid*
+replay_pid*
 
 # 로컬 환경 변수 (비밀키·개인 설정 — 커밋 금지)
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
-# IDE
+# IntelliJ
 .idea/
 *.iml
 *.iws
 *.ipr
+out/
+
+# Eclipse / STS / VS Code Java
 .project
 .classpath
 .settings/
+.factorypath
+.apt_generated/
+.apt_generated_tests/
+.springBeans
+.sts4-cache/
+bin/
+
+# VS Code
 .vscode/
 
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # JMeter / 부하 테스트 결과
 results/
 *.jtl
+jmeter.log
+*-report/
 
 # 로그
+logs/
 *.log
-hs_err_pid*.log
+
+# AI tools — 개인 로컬 설정
+.claude/settings.local.json
+CLAUDE.local.md
 
 # 기타
 *.swp
 *.swo
+*~
 ~$*

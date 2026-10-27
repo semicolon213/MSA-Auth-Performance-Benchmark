@@ -1,5 +1,24 @@
-target
+# 빌드 산출물
+**/target
+
+# 비밀값 — 빌드 컨텍스트에 포함하지 않음
+.env
+.env.*
+
+# VCS / IDE / OS
 .git
+.gitignore
 .idea
 *.iml
+.vscode
+.DS_Store
+
+# 이미지에 불필요한 파일
+docs
+jmeter
+k8s
+results
+*.jtl
+*.log
+*.md
 .mvn/wrapper/maven-wrapper.jar
