@@ -100,7 +100,7 @@ flowchart TB
 
 <p align="center"><img src="images/sequence.png" alt="인증 방식별 호출 흐름 (논문 그림 3-2)" width="760"></p>
 
-### 4.1 Step 1 — JWT Token Relay
+### 4.1 Step 1 JWT Token Relay
 
 ```mermaid
 sequenceDiagram
@@ -128,7 +128,7 @@ sequenceDiagram
 
 같은 토큰을 **4번** 검증합니다. 호출 깊이가 깊어질수록 검증 비용이 서비스마다 반복됩니다.
 
-### 4.2 Step 3 — Istio mTLS STRICT
+### 4.2 Step 3 Istio mTLS STRICT
 
 ```mermaid
 sequenceDiagram

@@ -64,7 +64,7 @@ curl http://<워커 IP>:30080/api/chain       # 체인 응답 확인
 kubectl -n msa-benchmark rollout restart deploy
 ```
 
-### Step 1 — JWT Relay
+### Step 1 JWT Relay
 
 ```bash
 kubectl -n msa-benchmark patch configmap msa-benchmark-env -p '{"data":{"APP_MODE":"jwt-relay"}}'
@@ -73,7 +73,7 @@ kubectl -n msa-benchmark rollout restart deploy
 
 현재 코드에서는 `jwt-relay`일 때 `/actuator/health`도 401을 반환해, 매니페스트의 liveness·readiness 프로브가 실패합니다. 실행 전에 [VERIFICATION.md §3](./VERIFICATION.md#3-알려진-문제)의 해결 방법 중 하나를 적용합니다.
 
-### Step 2 — Sidecar Only
+### Step 2 Sidecar Only
 
 ```bash
 kubectl label namespace msa-benchmark istio-injection=enabled --overwrite
@@ -105,7 +105,7 @@ spec:
       mode: DISABLE
 ```
 
-### Step 3 — Istio mTLS STRICT
+### Step 3 Istio mTLS STRICT
 
 Step 2의 `DestinationRule`을 지우고 `PeerAuthentication`을 STRICT로 바꿉니다.
 
